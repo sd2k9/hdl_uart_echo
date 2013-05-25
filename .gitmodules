@@ -1,0 +1,3 @@
+[submodule "src/ext-uart"]
+	path = src/ext-uart
+	url = git@github.com:sd2k9/uart.git
