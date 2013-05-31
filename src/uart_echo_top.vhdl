@@ -21,6 +21,8 @@
 -- Libraries to use
 library ieee;
 use ieee.std_logic_1164.all;
+-- Xilinx Primitives
+library UNISIM;
 
 -- *** Entity of the design
 entity uart_echo_top is
@@ -51,16 +53,14 @@ entity uart_echo_top is
 
 end entity uart_echo_top;
 
-
 architecture rtl of uart_echo_top is
 
     ----------------------------------------------------------------------------
     -- Constants
     ----------------------------------------------------------------------------
     -- Clock frequency in Hz after Clock Divider: Divide by 8
-    constant CLOCK_FREQUENCY_AFTER_CLKDIV : natural :=
-               natural( 1e12*real(CLOCK_PERIOD_BEFORE_CLKDIV/1 ps)/8 );
-    report "Clock frequency after Clk Divider = " & CLOCK_FREQUENCY_AFTER_CLKDIV/1e6 & " MHz" severity note;  -- Debug
+    constant CLOCK_FREQUENCY_AFTER_CLKDIV : positive :=
+               positive( 1.0e12 / ( real(CLOCK_PERIOD_BEFORE_CLKDIV/1 ps) * 8.0 ) );
 
     ----------------------------------------------------------------------------
     -- Component declarations
@@ -94,7 +94,7 @@ architecture rtl of uart_echo_top is
     signal uart_rx_reg, reset_n_reg : std_ulogic;  -- Registered Reset and UART RX
     signal reset : std_logic;           -- High-Active Reset
     -- UART Signals for loopback test, initialize inputs
-    signal uart_data_in             : std_logic_vector(7 downto 0) := (others <= '0');
+    signal uart_data_in             : std_logic_vector(7 downto 0) := (others => '0');
     signal uart_data_out            : std_logic_vector(7 downto 0);
     signal uart_data_in_stb         : std_ulogic := '0';
     signal uart_data_in_ack         : std_ulogic;
@@ -118,13 +118,15 @@ begin  -- architecture rtl
   ----------------------------------------------------------------------------
   -- Double-Deglitch and register inputs
   ----------------------------------------------------------------------------
+  -- Deglitching of uart_rx not really necessary, because the uart receiver
+  -- itself does another synchronizing step
   DEGLITCH : process (clk_div_out)
   begin
     if rising_edge(clk_div_out) then
       uart_rx_sync1 <= uart_rx;
-      uart_rx_reg   <= uart_rx_sync1 & uart_rx;
+      uart_rx_reg   <= uart_rx_sync1;
       reset_n_sync1 <= reset_n;
-      reset_n_reg   <= reset_n_sync1 | reset_n;
+      reset_n_reg   <= reset_n_sync1;
     end if;
   end process;
 
@@ -187,7 +189,14 @@ begin  -- architecture rtl
   disp_seg_n <= (others => '1');
   led_n <=  (others => '1');
 
-
+  ----------------------------------------------------------------------------
+  -- Debug Report statements
+  ----------------------------------------------------------------------------
+  debug_print: process
+  begin
+		report "Clock frequency after Clk Divider = " & real'image(real(CLOCK_FREQUENCY_AFTER_CLKDIV)/1.0e6) & " MHz" severity note;  -- Debug
+	wait;
+end process debug_print;
   
 end architecture rtl;
 
