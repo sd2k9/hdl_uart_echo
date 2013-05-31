@@ -41,10 +41,10 @@ entity uart_echo_top is
       uart_rx    : in  std_logic;          -- Receive Signal
       uart_tx    : out std_logic;          -- Transmit Signal
       -- Other ports of Reference Board - not used
-      -- led_n      : out std_logic_vector(3 downto 0);  -- 4 User LEDs (low active)
       -- btn1       : in std_logic;  -- 2nd Push Button (low active)
       -- sw0, sw1   : in std_logic;  -- slide buttons
       -- 7 Segment Display - all low active; see Reference Manual
+      led_n      : out std_logic_vector(3 downto 0);  -- 4 User LEDs (low active)
       disp_ena_n : out std_logic_vector(1 to 4);  -- 4 Digit Enabler
       disp_seg_n : out std_logic_vector(1 to 8)   -- 7.1 Segments
       );
@@ -182,9 +182,10 @@ begin  -- architecture rtl
   ----------------------------------------------------------------------------
   -- High-active reset
   reset <= not reset_n_reg;
-  -- Just disable 7-segment display
+  -- Just disable 7-segment display and LEDs
   disp_ena_n <= (others => '1');
   disp_seg_n <= (others => '1');
+  led_n <=  (others => '1');
 
 
   
