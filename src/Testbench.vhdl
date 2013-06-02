@@ -63,7 +63,10 @@ architecture beh of Testbench is
   constant UART_BIT_TIME : time := (1 sec / UART_BAUD_RATE);
   -- Break between data bytes send (can be also zero for successive bursts)
   constant WAIT_BEFORE_SEND : time := 10 us;
-  
+  -- Clock frequency in Hz after Clock Divider: Divide by 8
+  constant CLOCK_FREQUENCY_AFTER_CLKDIV : positive :=
+           positive( 1.0e12 / ( real(CLOCK_PERIOD/1 ps) * 8.0 ) );
+
 begin  -- architecture beh
 
 
@@ -72,7 +75,7 @@ begin  -- architecture beh
   ----------------------------------------------------------------------------
   dut: entity work.uart_echo_top
     generic map (
-      CLOCK_PERIOD_BEFORE_CLKDIV => CLOCK_PERIOD,
+      CLOCK_FREQUENCY_AFTER_CLKDIV => CLOCK_FREQUENCY_AFTER_CLKDIV, -- 1 MHz
       UART_BAUD_RATE             => UART_BAUD_RATE)
     port map (
       clk        => clock,

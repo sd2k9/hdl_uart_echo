@@ -28,8 +28,8 @@ library UNISIM;
 entity uart_echo_top is
   generic
     (
-      -- Clock period before Clock Divider
-      CLOCK_PERIOD_BEFORE_CLKDIV : time := 125 ns;  -- 8 MHz
+      -- Clock frequency AFTER Clock Divider in Hz -- "time" is not synthesizable
+      CLOCK_FREQUENCY_AFTER_CLKDIV : positive := 1e6 ;  -- 1 MHz
       -- Baud Rate Setting in bps
       UART_BAUD_RATE               : natural := 4800          -- 4800bps
       );
@@ -58,9 +58,6 @@ architecture rtl of uart_echo_top is
     ----------------------------------------------------------------------------
     -- Constants
     ----------------------------------------------------------------------------
-    -- Clock frequency in Hz after Clock Divider: Divide by 8
-    constant CLOCK_FREQUENCY_AFTER_CLKDIV : positive :=
-               positive( 1.0e12 / ( real(CLOCK_PERIOD_BEFORE_CLKDIV/1 ps) * 8.0 ) );
 
     ----------------------------------------------------------------------------
     -- Component declarations
@@ -190,13 +187,14 @@ begin  -- architecture rtl
   led_n <=  (others => '1');
 
   ----------------------------------------------------------------------------
-  -- Debug Report statements
+  -- Debug Report statements - Do not synthesize
   ----------------------------------------------------------------------------
+  -- pragma translate_off
   debug_print: process
   begin
 		report "Clock frequency after Clk Divider = " & real'image(real(CLOCK_FREQUENCY_AFTER_CLKDIV)/1.0e6) & " MHz" severity note;  -- Debug
 	wait;
-end process debug_print;
-  
+  end process debug_print;
+   -- pragma translate_on
 end architecture rtl;
 
