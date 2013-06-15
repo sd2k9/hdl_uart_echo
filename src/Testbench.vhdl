@@ -33,6 +33,9 @@ entity Testbench is
 
 end entity Testbench;
 
+
+-- This is a semi-automated testbench which feed some values and receives them
+-- back. See STIMULI_DATA. The comparison you need to do by yourself.
 architecture beh of Testbench is
 
   ----------------------------------------------------------------------------

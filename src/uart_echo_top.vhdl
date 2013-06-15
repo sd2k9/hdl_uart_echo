@@ -16,6 +16,9 @@
 
 -- *** Toplevel Module
 -- Based on LGPL code from Peter A Bennett, https://github.com/pabennett/uart
+-- The toplevel implements a 4800bps UART echo for the
+-- Xilinx Coolrunner II Starter Board
+-- Connect the TODO (or compatible) to the CONNECTOR TODO
 
 
 -- Libraries to use
