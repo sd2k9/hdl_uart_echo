@@ -31,16 +31,20 @@ entity uart_echo_top is
       -- Clock frequency AFTER Clock Divider in Hz -- "time" is not synthesizable
       CLOCK_FREQUENCY_AFTER_CLKDIV : positive := 1e6 ;  -- 1 MHz
       -- Baud Rate Setting in bps
-      UART_BAUD_RATE               : natural := 4800          -- 4800bps
+      UART_BAUD_RATE               : natural := 4800 ;  -- 4800bps
+      -- When true generate code to debounce and synchronize the external reset
+      -- This setting blocks GSR inferrence for Xilinx CoolRunner CPLD device
+      -- DEBOUNCE_SYNCHRONIZE_RESET   : boolean := true
+      DEBOUNCE_SYNCHRONIZE_RESET   : boolean := false
       );
 
   port
     (
       -- Control Signals
       clk        : in  std_logic;                 -- Clock Signals
-      reset_n    : in  std_logic;                 -- low active reset
+      reset_n    : in  std_logic;                 -- low active reset - use signal "reset" in design
       -- UART Signals
-      uart_rx    : in  std_logic;          -- Receive Signal
+      uart_rx    : in  std_logic;          -- Receive Signal - use uart_rx_int in design
       uart_tx    : out std_logic;          -- Transmit Signal
       -- Other ports of Reference Board - not used
       -- btn1       : in std_logic;  -- 2nd Push Button (low active)
@@ -84,12 +88,12 @@ architecture rtl of uart_echo_top is
     ----------------------------------------------------------------------------
     -- signals
     ----------------------------------------------------------------------------
-    -- Deglitch input pin signals - DO NOT USE THEM (and the pins) DIRECTLY
-    signal uart_rx_sync1, reset_n_sync1 : std_ulogic;  -- also uart_rx, reset_n, clk
     -- Control signals - use them
     signal clk_div_out : std_ulogic;     -- Clock after Clock Divider
-    signal uart_rx_reg, reset_n_reg : std_ulogic;  -- Registered Reset and UART RX
-    signal reset : std_logic;           -- High-Active Reset
+    signal reset : std_ulogic;           -- High-Active Reset - use this signal
+                                         -- as async reset for GSR inferrence
+    -- Internal uart_rx signal, after debouncer and sync stage
+    signal uart_rx_int   : std_ulogic;
     -- UART Signals for loopback test, initialize inputs
     signal uart_data_in             : std_logic_vector(7 downto 0) := (others => '0');
     signal uart_data_out            : std_logic_vector(7 downto 0);
@@ -113,19 +117,51 @@ begin  -- architecture rtl
    );
 
   ----------------------------------------------------------------------------
-  -- Double-Deglitch and register inputs
+  -- Double-Deglitch and register input UART_RX
   ----------------------------------------------------------------------------
   -- Deglitching of uart_rx not really necessary, because the uart receiver
   -- itself does another synchronizing step
-  DEGLITCH : process (clk_div_out)
-  begin
-    if rising_edge(clk_div_out) then
-      uart_rx_sync1 <= uart_rx;
-      uart_rx_reg   <= uart_rx_sync1;
-      reset_n_sync1 <= reset_n;
-      reset_n_reg   <= reset_n_sync1;
-    end if;
-  end process;
+  DEGLITCH_UART_RX : block is
+    signal uart_rx_sync1 : std_ulogic;
+    signal uart_rx_reg   : std_ulogic;
+  begin  -- DEGLITCH_UART_RX
+    process (clk_div_out)
+    begin
+      if rising_edge(clk_div_out) then
+        uart_rx_sync1 <= uart_rx;
+        uart_rx_reg   <= uart_rx_sync1;
+      end if;
+    end process;
+  -- Assign-back the signal to use
+   uart_rx_int <= uart_rx_reg;
+  end block DEGLITCH_UART_RX;
+
+  ----------------------------------------------------------------------------
+  -- DEBOUNCE_SYNCHRONIZE_RESET == true:
+  --   Double-Deglitch, register and invert input RESET_N
+  -- DEBOUNCE_SYNCHRONIZE_RESET == false:
+  --   Just invert input RESET_N
+  ----------------------------------------------------------------------------
+  GENERATE_RESET_DEGLICH : if DEBOUNCE_SYNCHRONIZE_RESET = true generate
+    DEGLITCH_RESET_N : block is
+      signal reset_n_sync1 : std_ulogic;
+      signal reset_n_reg   : std_ulogic;
+    begin  -- DEGLITCH_RESET_N
+      process (clk_div_out)
+      begin
+        if rising_edge(clk_div_out) then
+          reset_n_sync1 <= reset_n;
+          reset_n_reg   <= reset_n_sync1;
+        end if;
+      end process;
+      -- Create High-active reset after register
+      reset <= not reset_n_reg;
+    end block DEGLITCH_RESET_N;
+  end generate   GENERATE_RESET_DEGLICH;
+  GENERATE_ASYC_RESET: if DEBOUNCE_SYNCHRONIZE_RESET = false generate
+    -- Just invert reset
+    reset <= not reset_n;
+  end generate GENERATE_ASYC_RESET;
 
   ----------------------------------------------------------------------------
   -- UART instance
@@ -145,19 +181,18 @@ begin  -- architecture rtl
       DATA_STREAM_OUT_STB => uart_data_out_stb,
       DATA_STREAM_OUT_ACK => uart_data_out_ack,
       TX                  => uart_tx,
-      RX                  => uart_rx_reg);
+      RX                  => uart_rx_int);
 
     ----------------------------------------------------------------------------
     -- Simple loopback, retransmit any received data
     ----------------------------------------------------------------------------
-    UART_LOOPBACK : process (clk_div_out)
+    UART_LOOPBACK : process (clk_div_out, reset)
     begin
-        if rising_edge(clk_div_out) then
             if reset = '1' then
                 uart_data_in_stb        <= '0';
                 uart_data_out_ack       <= '0';
                 uart_data_in            <= (others => '0');
-            else
+            elsif rising_edge(clk_div_out) then
                 -- Acknowledge data receive strobes and set up a transmission
                 -- request
                 uart_data_out_ack       <= '0';
@@ -171,7 +206,6 @@ begin  -- architecture rtl
                 if uart_data_in_ack = '1' then
                     uart_data_in_stb    <= '0';
                 end if;
-            end if;
         end if;
     end process;
 
@@ -179,8 +213,6 @@ begin  -- architecture rtl
   ----------------------------------------------------------------------------
   -- Simple signals
   ----------------------------------------------------------------------------
-  -- High-active reset
-  reset <= not reset_n_reg;
   -- Just disable 7-segment display and LEDs
   disp_ena_n <= (others => '1');
   disp_seg_n <= (others => '1');
