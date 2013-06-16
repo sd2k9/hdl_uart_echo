@@ -23,12 +23,13 @@ use ieee.std_logic_1164.all;
 use work.std_logic_1164_additions.all;
 
 entity Testbench is
+  -- Must match RTL settings in file TestBench_rtl_conf.vhdl
   generic
     (
       -- The Pin Clock Rate
-      CLOCK_PERIOD     : time    := 125 ns;  -- 8 MHz
+      CLOCK_PERIOD     : time := 125 ns;  -- 8 MHz
       -- Baud Rate Setting in bps
-      UART_BAUD_RATE : natural := 4800    -- 4800bps
+      UART_BAUD_RATE : natural:= 4800    -- 4800bps
       );
 
 end entity Testbench;
@@ -67,24 +68,43 @@ architecture beh of Testbench is
   -- Break between data bytes send (can be also zero for successive bursts)
   constant WAIT_BEFORE_SEND : time := 10 us;
   -- Clock frequency in Hz after Clock Divider: Divide by 8
+  -- Used by configuration TestBench_rtl_conf.vhdl
   constant CLOCK_FREQUENCY_AFTER_CLKDIV : positive :=
            positive( 1.0e12 / ( real(CLOCK_PERIOD/1 ps) * 8.0 ) );
+
+  ----------------------------------------------------------------------------
+  -- DUT Component
+  ----------------------------------------------------------------------------
+  component uart_echo_top is
+    -- Generic map for RTL is set in Testbench_rtl_conf.vhdl
+    -- POST does not required any configuration, because backannotated netlist
+    -- has no generics anymore
+    port (
+      clk        : in  std_logic;
+      reset_n    : in  std_logic;
+      uart_rx    : in  std_logic;
+      uart_tx    : out std_logic;
+      led_n      : out std_logic_vector(3 downto 0);
+      disp_ena_n : out std_logic_vector(1 to 4);
+      disp_seg_n : out std_logic_vector(1 to 8));
+  end component uart_echo_top;
 
 begin  -- architecture beh
 
 
   ----------------------------------------------------------------------------
-  -- DUT (Direct) Instance
+  -- DUT Instance
   ----------------------------------------------------------------------------
-  dut: entity work.uart_echo_top
-    generic map (
-      CLOCK_FREQUENCY_AFTER_CLKDIV => CLOCK_FREQUENCY_AFTER_CLKDIV, -- 1 MHz
-      UART_BAUD_RATE             => UART_BAUD_RATE)
+  dut: uart_echo_top
+    -- Generic map for RTL is set in Testbench_rtl_conf.vhdl
+    -- POST does not required any configuration, because backannotated netlist
+    -- has no generics anymore
     port map (
       clk        => clock,
       reset_n    => rst_n,
       uart_rx    => uart_rx,            -- in
       uart_tx    => uart_tx,            -- out
+      led_n => open,
       disp_ena_n => open,
       disp_seg_n => open);
 

@@ -32,13 +32,13 @@ entity uart_echo_top is
   generic
     (
       -- Clock frequency AFTER Clock Divider in Hz -- "time" is not synthesizable
-      CLOCK_FREQUENCY_AFTER_CLKDIV : positive := 1e6 ;  -- 1 MHz
+      CLOCK_FREQUENCY_AFTER_CLKDIV : positive; --  e.g. 1e6 ;  -- 1 MHz
       -- Baud Rate Setting in bps
-      UART_BAUD_RATE               : natural := 4800 ;  -- 4800bps
+      UART_BAUD_RATE               : natural; --  e.g. 4800 ;  -- 4800bps
       -- When true generate code to debounce and synchronize the external reset
       -- This setting blocks GSR inferrence for Xilinx CoolRunner CPLD device
-      -- DEBOUNCE_SYNCHRONIZE_RESET   : boolean := true
-      DEBOUNCE_SYNCHRONIZE_RESET   : boolean := false
+      -- DEBOUNCE_SYNCHRONIZE_RESET   : boolean := true|false
+      DEBOUNCE_SYNCHRONIZE_RESET   : boolean
       );
 
   port

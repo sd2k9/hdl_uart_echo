@@ -38,6 +38,22 @@ More Information
 ================
 
 
+Synthesis and Configuration
+---------------------------
+- RTL Simulation
+  - Testbench.vhdl:          Generic map of entity Testbench
+  - Testbench_rtl_conf.vhdl: Configuration for the UART module
+  - Need to select Project/Manual compile order
+- Synthesis
+  - Define the Generics in Synthesis options
+    Left Bar/Implement Design/Synthesize/Right Click Process Properties
+  - Must match the RTL simulation settings
+  - Unselect Project/Manual compile order
+- POST Simulation
+  - Testbench.vhdl:  Generic map of entity Testbench
+  - Unselect Project/Manual compile order
+
+
 Optimizing UART receiver
 ------------------------
 I forked the UART module from https://github.com/pabennett/uart and

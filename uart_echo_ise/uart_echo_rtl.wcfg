@@ -3,8 +3,9 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/rola/devel/hdl/uart_echo/uart_echo_ise/Testbench_isim_beh3.wdb" id="1" type="auto">
+      <db_ref path="/home/rola/devel/hdl/uart_echo/uart_echo_ise/Testbench_isim_beh.wdb" id="1" type="auto">
          <top_modules>
+            <top_module name="math_real" />
             <top_module name="numeric_std" />
             <top_module name="std_logic_1164" />
             <top_module name="std_logic_1164_additions" />
@@ -14,7 +15,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="11" />
+   <WVObjectSize size="8" />
    <wvobject fp_name="/testbench/clock" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clock</obj_property>
       <obj_property name="ObjectShortName">clock</obj_property>
@@ -39,21 +40,17 @@
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/dut/UART_1/c_tx_divider_val" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">c_tx_divider_val</obj_property>
-      <obj_property name="ObjectShortName">c_tx_divider_val</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testbench/dut/UART_1/c_rx_divider_val" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">c_rx_divider_val</obj_property>
-      <obj_property name="ObjectShortName">c_rx_divider_val</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testbench/dut/UART_1/baud_tick" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">baud_tick</obj_property>
-      <obj_property name="ObjectShortName">baud_tick</obj_property>
-   </wvobject>
    <wvobject fp_name="group39" type="group">
       <obj_property name="label">Send</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/testbench/dut/UART_1/baud_counter" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">baud_counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">baud_counter[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/dut/UART_1/baud_tick" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">baud_tick</obj_property>
+         <obj_property name="ObjectShortName">baud_tick</obj_property>
+      </wvobject>
       <wvobject fp_name="/testbench/dut/UART_1/data_stream_in" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">data_stream_in[7:0]</obj_property>
          <obj_property name="ObjectShortName">data_stream_in[7:0]</obj_property>
@@ -90,6 +87,22 @@
    <wvobject fp_name="group60" type="group">
       <obj_property name="label">Receive</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/testbench/dut/UART_1/oversample_baud_counter" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oversample_baud_counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">oversample_baud_counter[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/dut/UART_1/baud_counter" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">baud_counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">baud_counter[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/dut/UART_1/uart_rx_sync_clock" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">uart_rx_sync_clock[3:0]</obj_property>
+         <obj_property name="ObjectShortName">uart_rx_sync_clock[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testbench/dut/UART_1/uart_rx_sample_tick" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">uart_rx_sample_tick</obj_property>
+         <obj_property name="ObjectShortName">uart_rx_sample_tick</obj_property>
+      </wvobject>
       <wvobject fp_name="/testbench/dut/UART_1/oversample_baud_tick" type="logic" db_ref_id="1">
          <obj_property name="ElementShortName">oversample_baud_tick</obj_property>
          <obj_property name="ObjectShortName">oversample_baud_tick</obj_property>
@@ -98,21 +111,13 @@
          <obj_property name="ElementShortName">uart_rx_bit</obj_property>
          <obj_property name="ObjectShortName">uart_rx_bit</obj_property>
       </wvobject>
-      <wvobject fp_name="/testbench/dut/UART_1/uart_rx_bit_spacing" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">uart_rx_bit_spacing[3:0]</obj_property>
-         <obj_property name="ObjectShortName">uart_rx_bit_spacing[3:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/dut/UART_1/uart_rx_bit_tick" type="logic" db_ref_id="1">
-         <obj_property name="ElementShortName">uart_rx_bit_tick</obj_property>
-         <obj_property name="ObjectShortName">uart_rx_bit_tick</obj_property>
-      </wvobject>
       <wvobject fp_name="/testbench/dut/UART_1/uart_rx_state" type="other" db_ref_id="1">
          <obj_property name="ElementShortName">uart_rx_state</obj_property>
          <obj_property name="ObjectShortName">uart_rx_state</obj_property>
       </wvobject>
-      <wvobject fp_name="/testbench/dut/UART_1/uart_tx_data_block" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">uart_tx_data_block[7:0]</obj_property>
-         <obj_property name="ObjectShortName">uart_tx_data_block[7:0]</obj_property>
+      <wvobject fp_name="/testbench/dut/UART_1/uart_rx_data_block" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">uart_rx_data_block[7:0]</obj_property>
+         <obj_property name="ObjectShortName">uart_rx_data_block[7:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/testbench/dut/UART_1/uart_rx_count" type="other" db_ref_id="1">
          <obj_property name="ElementShortName">uart_rx_count</obj_property>
