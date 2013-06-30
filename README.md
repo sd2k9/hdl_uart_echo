@@ -15,7 +15,7 @@ Requirements
 ------------
 - Device: Xilinx Coolrunner II
 - Board: Coolrunner II Starter Board
-- Extension Board: TODO
+- Extension Board: PmodUSBUART2 or PmodUSBUART2
 - Software: Xilinx ISE 14.5
 - Terminal program: Under linux you can use minicom or cutecom
 
@@ -30,13 +30,11 @@ License
 
 Homepage
 --------
-TODO - CORRECT ME
 https://sethdepot.org/site/HdlLsiSources
 
 
 More Information
 ================
-
 
 Synthesis and Configuration
 ---------------------------

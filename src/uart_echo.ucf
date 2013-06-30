@@ -33,9 +33,23 @@ NET "led_n<2>"  LOC = "P66" | IOSTANDARD = LVTTL ;
 NET "led_n<3>"  LOC = "P64" | IOSTANDARD = LVTTL ; 
 NET "reset_n"  LOC = "P143" | SCHMITT_TRIGGER  | IOSTANDARD = LVCMOS33 ; 
 
-# TODO - TEMPORARY
-NET "uart_rx"  LOC = "P136" | SCHMITT_TRIGGER  | IOSTANDARD = LVCMOS33 ; 
-NET "uart_tx"  LOC = "P134" | IOSTANDARD = LVCMOS33 ; 
+# *** Pmod USBUART2 Connections
+# Directions are relative to USBUART2 Board
+#  Signal    Func   	    J1    CPLD	Note
+#  RXD 	    Input/Data	    8	    6
+NET "uart_tx"  LOC = "P6" | IOSTANDARD = LVCMOS33 ;
+#  TXD 	    Output/Data	    9	    4
+NET "uart_rx"  LOC = "P4" | SCHMITT_TRIGGER  | IOSTANDARD = LVCMOS33 ;
+#  RTS#	    Out/Handshake   7	    9	NC
+#  CTS#	    In/Handshake    10	    2	Keep Low
+NET "uart_ctsx"  LOC = "P2" | IOSTANDARD = LVCMOS33 ;
+#  DTR#	    Out/Handshake   1	    10	NC
+#  DSR#	    In/Handshake    2	    7	Keep Low
+NET "uart_dsrx"  LOC = "P7" | IOSTANDARD = LVCMOS33 ;
+#  RI#	    In/Ring Ind.    3	    5	Remote Wakeup - Keep High
+NET "uart_rix"   LOC = "P5" | IOSTANDARD = LVCMOS33 ;
+#  DCD#	    In/Carrier Det  4	    3	Keep Low
+NET "uart_dcdx"  LOC = "P3" | IOSTANDARD = LVCMOS33 ;
 
 #PACE: Start of PACE Area Constraints
 

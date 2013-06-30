@@ -18,7 +18,7 @@
 -- Based on LGPL code from Peter A Bennett, https://github.com/pabennett/uart
 -- The toplevel implements a 4800bps UART echo for the
 -- Xilinx Coolrunner II Starter Board
--- Connect the TODO (or compatible) to the CONNECTOR TODO
+-- Connect the PmodUSBUART2_USB_UART (or USBUART1 or compatible) to the  PMOD Connector J1
 
 
 -- Libraries to use
@@ -49,6 +49,13 @@ entity uart_echo_top is
       -- UART Signals
       uart_rx    : in  std_logic;          -- Receive Signal - use uart_rx_int in design
       uart_tx    : out std_logic;          -- Transmit Signal
+      -- UART control signals for Pmod USBUART2 Module
+      --  RTS#          NC
+      uart_ctsx           : out std_logic;  --  CTS#          Keep Low
+      --  DTR#          NC
+      uart_dsrx           : out std_logic;  --  DSR#          Keep Low
+      uart_rix            : out std_logic;  --  RI#           Remote Wakeup - Keep High
+      uart_dcdx           : out std_logic;  --  DCD#          Keep Low
       -- Other ports of Reference Board - not used
       -- btn1       : in std_logic;  -- 2nd Push Button (low active)
       -- sw0, sw1   : in std_logic;  -- slide buttons
@@ -220,6 +227,11 @@ begin  -- architecture rtl
   disp_ena_n <= (others => '1');
   disp_seg_n <= (others => '1');
   led_n <=  (others => '1');
+  -- UART Control signals which we just keep static
+  uart_ctsx <= '0';  --  CTS#          Keep Low
+  uart_dsrx <= '0';  --  DSR#          Keep Low
+  uart_rix  <= '1';  --  RI#           Remote Wakeup - Keep High
+  uart_dcdx <= '0';  --  DCD#          Keep Low
 
   ----------------------------------------------------------------------------
   -- Debug Report statements - Do not synthesize
