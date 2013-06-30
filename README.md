@@ -7,7 +7,7 @@ Echo incoming UART characters back to the sender.
 
 This repository includes the Toplevel, test bench and the Xilinx ISE project.
 The UART module is references as subproject below src/ext-uart/
-    Source: https://github.com/sd2k9/uart
+    Source: https://github.com/sd2k9/hdl_uart
 
 UART Communication settings:  4800bps, 8 Data, 1 Stop, No parity
 
@@ -103,8 +103,9 @@ Implementation results with the default strategy are listed for every step:
     |77 /256 ( 30%) |129 /896  ( 14%) |100 /640  ( 16%) |58 /256 ( 23%) |20 /118 ( 17%)|
 
 
-Pull requests are pending/will be prepared soon.
-
+Pull requests will be prepared soon
+Note: Due to rebasing the given hashes are most likely invalid now.
+      See history of the forked subproject: https://github.com/sd2k9/hdl_uart
 
 
 UART/RS232 Protocol
