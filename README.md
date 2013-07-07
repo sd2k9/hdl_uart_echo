@@ -16,7 +16,9 @@ Requirements
 ------------
 - Device: Xilinx Coolrunner II
 - Board: Coolrunner II Starter Board
-- Extension Board: PmodUSBUART2 or PmodUSBUART2
+- Extension Board: PmodUSBUART2 or PmodUSBUART
+  http://thoseboards.com/index.php/component/content/article/12
+  http://www.digilentinc.com/Products/Detail.cfm?NavPath=2,401,928&Prod=PMOD-USB-UART
 - Software: Xilinx ISE 14.5
 - Terminal program: Under linux you can use minicom or cutecom
 
