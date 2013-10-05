@@ -1,5 +1,5 @@
 --     Testbench.vhdl - UART Echo for Xilinx Coolrunner II Starter Board - Testbench
---     Copyright (C) 2013, Robert Lange <robert.lange@s1999.tu-chemnitz.de>
+--     Copyright (C) 2013, Robert Lange <sd2k9@sethdepot.org>
 --
 --     This program is free software: you can redistribute it and/or modify
 --     it under the terms of the GNU General Public License as published by
