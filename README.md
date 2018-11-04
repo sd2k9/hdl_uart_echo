@@ -33,7 +33,7 @@ License
 
 Homepage
 --------
-https://sethdepot.org/site/HdlLsiSources
+https://sethdepot.org/site/HdlLsiSources.html
 
 
 More Information
